@@ -27,6 +27,17 @@ def test_key_exchange():
     print('Key exchange test passed!')
 
 
+def test_decrypt():
+    print('Testing decrypt...')
+    ciphertexts = (5, 6)
+    p = 11
+    d = 3
+
+    plaintext = pow(ciphertexts[0], p-1-d)*ciphertexts[1] % p
+    assert(plaintext == 7)
+    print('Decrypt test passed!')
+
 if __name__ == '__main__':
-    test_key_exchange()
+    # test_key_exchange()
+    test_decrypt()
     print('All tests passed')
