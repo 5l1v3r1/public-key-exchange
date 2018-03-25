@@ -6,14 +6,16 @@ def create_public_keys():
     g = 2
     d = 3
 
-    second = pow(g, d) % p
+    second = power(g, d, p)
 
     return (g, second, p)
 
 
 def create_ciphertexts(public_keys, m, k):
-    c1 = pow(public_keys[0], k) % public_keys[2]
-    c2 = pow(public_keys[1], k)*m % public_keys[2]
+    c1 = power(public_keys[0], k, public_keys[2])
+    # print("(%d^%d %% %d) = %d" % (public_keys[1], k, public_keys[2], power(public_keys[1], k, public_keys[2])))
+    # print("((%d^%d %% %d)*(%d %% %d)) %% %d = " % (public_keys[1], k, public_keys[2], m, public_keys[2], public_keys[2]))
+    c2 = (power(public_keys[1], k, public_keys[2])*(m % public_keys[2])) % public_keys[2]
 
     return (c1, c2)
 
@@ -36,18 +38,30 @@ def test_decrypt():
     p = 11
     d = 3
 
-    plaintext = pow(ciphertexts[0], p-1-d)*ciphertexts[1] % p
+    plaintext = (power(ciphertexts[0], p-1-d, p)*(ciphertexts[1] % p)) % p
     assert(plaintext == 7)
     print('Decrypt test passed!')
 
 
-def power(p, g, d):
+def to_bin_array(bits):
+    array = []
+    bits = bits[2:]
+    # print(bits)
+    for bit in bits:
+        array.append(int(bit))
+
+    return array
+
+
+def power(base, exponent, modulus):
     result = 1
-    bits = bin(d)
-    for i in reversed(range(2, len(bits))):
-        result = result*result % p
-        if int(bits[i]) == 1:
-            result = result*g % p
+    bits = bin(exponent)
+    bits = to_bin_array(bits)
+    # print(bits)
+    for bit in bits:
+        result = result*result % modulus
+        if bit == 1:
+            result = result*base % modulus
     
     return result
 
@@ -59,7 +73,7 @@ def test_fast_exponentiation():
     d = 641361145
 
     pub_key = power(p, g, d)
-    assert(pub_key == 2990468997)
+    assert(pub_key ==  599167434)
     print('Fast exponentiation test passed!')
 
 
@@ -76,6 +90,14 @@ def find_integers_for_prime_testing(n):
     return (-1, -1)
 
 
+def fast_pow(base, exponent):
+    result = 1
+    for _ in range(0, exponent):
+        result *= base
+
+    return result
+
+
 def is_prime(n):
     if n == 2:
         return True
@@ -85,10 +107,10 @@ def is_prime(n):
     print("k: %d" % k)
     print("q: %d" % q)
     print("a: %d" % a)
-    if pow(a, q) % n == 1:
+    if power(a, q, n) == 1:
         return True
     for j in range(0, k-1):
-        if pow(a, pow(2, j)*q) % n == n-1:
+        if power(a, fast_pow(2, j)*q, n) == n-1:
             return True
 
     return False
@@ -108,8 +130,8 @@ def test_miller_rabin():
 
 
 if __name__ == '__main__':
-    # test_key_exchange()
-    # test_decrypt()
-    # test_fast_exponentiation()
+    test_key_exchange()
+    test_decrypt()
+    test_fast_exponentiation()
     test_miller_rabin()
     print('All tests passed')
