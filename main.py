@@ -37,7 +37,36 @@ def test_decrypt():
     assert(plaintext == 7)
     print('Decrypt test passed!')
 
+
+def power(p, g, d):
+    result = 1
+    bits = bin(d)
+    # for i in reversed(range(2, len(bits))):
+    #     print(bits[i])
+    for i in reversed(range(2, len(bits))):
+        # print("Current bit: %d" % bits[i])
+        result = result*result % p
+        if int(bits[i]) == 1:
+            result = result*g % p
+    
+    return result
+
+
+def test_fast_exponentiation():
+    print('Testing fast exponentiation...')
+    p = 3306484913
+    # p = 11
+    g = 2
+    d = 641361145
+    # d = 3
+
+    pub_key = power(p, g, d)
+    assert(pub_key == 2990468997)
+    print('Fast exponentiation test passed!')
+
+
 if __name__ == '__main__':
     # test_key_exchange()
-    test_decrypt()
+    # test_decrypt()
+    test_fast_exponentiation()
     print('All tests passed')
