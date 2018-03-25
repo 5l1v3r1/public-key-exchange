@@ -1,3 +1,6 @@
+import random
+
+
 def create_public_keys():
     p = 11
     g = 2
@@ -41,10 +44,7 @@ def test_decrypt():
 def power(p, g, d):
     result = 1
     bits = bin(d)
-    # for i in reversed(range(2, len(bits))):
-    #     print(bits[i])
     for i in reversed(range(2, len(bits))):
-        # print("Current bit: %d" % bits[i])
         result = result*result % p
         if int(bits[i]) == 1:
             result = result*g % p
@@ -55,18 +55,61 @@ def power(p, g, d):
 def test_fast_exponentiation():
     print('Testing fast exponentiation...')
     p = 3306484913
-    # p = 11
     g = 2
     d = 641361145
-    # d = 3
 
     pub_key = power(p, g, d)
     assert(pub_key == 2990468997)
     print('Fast exponentiation test passed!')
 
 
+def find_integers_for_prime_testing(n):
+    # n >= 3
+    q = (n-1)
+    k = 0
+    while True:
+        q = q // 2
+        k += 1
+        if q % 2 == 1:
+            return (k, q)
+
+    return (-1, -1)
+
+
+def is_prime(n):
+    if n == 2:
+        return True
+    (k, q) = find_integers_for_prime_testing(n)
+    a = random.randint(2, n-2)
+    print("n: %d" % n)
+    print("k: %d" % k)
+    print("q: %d" % q)
+    print("a: %d" % a)
+    if pow(a, q) % n == 1:
+        return True
+    for j in range(0, k-1):
+        if pow(a, pow(2, j)*q) % n == n-1:
+            return True
+
+    return False
+
+
+def test_miller_rabin():
+    print('Testing Miller-Rabin...')
+    # assert(is_prime(104717))
+    # assert(is_prime(577757))
+    # assert(is_prime(101089))
+    assert(is_prime(280001))
+    # assert(not is_prime(95721889))
+    # assert(not is_prime(4096))
+    # assert(not is_prime(252601))
+    # assert(not is_prime(3057601))
+    print('Miller-Rabin test passed!')
+
+
 if __name__ == '__main__':
     # test_key_exchange()
     # test_decrypt()
-    test_fast_exponentiation()
+    # test_fast_exponentiation()
+    test_miller_rabin()
     print('All tests passed')
