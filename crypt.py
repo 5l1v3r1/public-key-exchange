@@ -6,7 +6,7 @@ from exponent import power
 def create_ciphertexts(public_key, block, k):
     c1 = power(public_key[1], k, public_key[0])
     # print("(%d^%d %% %d) = %d" % (public_key[1], k, public_key[0], c1))
-    
+
     c2 = (power(public_key[2], k, public_key[0])*(block % public_key[0])) % public_key[0]
     # print("((%d^%d %% %d)*(%d %% %d)) %% %d = %d" % (public_key[2], k, public_key[0], block, public_key[0], public_key[0], c2))
 

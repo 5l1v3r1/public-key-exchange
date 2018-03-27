@@ -1,3 +1,5 @@
+import random
+
 def display_usage_message():
     print('\n')
     print('Usage:')
@@ -12,7 +14,8 @@ if __name__ == '__main__':
     while True:
         operation = input('Enter a command: ')
         if operation == 'key_gen':
-            print('key')
+            seed = input('Input a seed: ')
+            seed = random.seed(int(seed))
         elif operation == 'encrypt':
             print('encrypt')
         elif operation == 'decrypt':

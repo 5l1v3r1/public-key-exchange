@@ -17,7 +17,7 @@ def power(base, exponent, modulus):
         result = result*result % modulus
         if bit == 1:
             result = result*base % modulus
-    
+
     return result
 
 
