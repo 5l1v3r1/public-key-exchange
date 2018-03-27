@@ -1,5 +1,9 @@
 import random
 
+from crypt import *
+from key_gen import *
+
+
 def display_usage_message():
     print('\n')
     print('Usage:')
@@ -16,10 +20,22 @@ if __name__ == '__main__':
         if operation == 'key_gen':
             seed = input('Input a seed: ')
             seed = random.seed(int(seed))
+            set_up_keys()
         elif operation == 'encrypt':
-            print('encrypt')
+            with open('testfiles/pubkey.txt', 'r') as f:
+                public_key = f.readline().rsplit()
+                public_key = [int(num) for num in public_key]
+                ciphertexts = encrypt('testfiles/ptext.txt', public_key)
+                print('Ciphertext:')
+                print(ciphertexts)
         elif operation == 'decrypt':
-            print('decrypt')
+            with open('testfiles/privkey.txt', 'r') as f:
+                private_key = f.readline().rsplit()
+                private_key = [int(num) for num in private_key]
+
+            plaintext = decrypt('testfiles/ctext.txt', private_key)
+            print('Plaintext')
+            print(plaintext)
         elif operation == 'exit':
             break
         else:
