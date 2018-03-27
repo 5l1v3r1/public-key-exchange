@@ -14,6 +14,8 @@ def create_ciphertexts(public_key, block, k):
 
 
 def decrypt(ciphertexts_file, private_key):
+    output = open('testfiles/dtext.txt', 'w+')
+
     plaintext = b''
     with open(ciphertexts_file, 'r') as f:
         while True:
@@ -25,13 +27,21 @@ def decrypt(ciphertexts_file, private_key):
             first = power(ciphertexts[0], private_key[0]-1-private_key[2], private_key[0])
             second = ciphertexts[1] % private_key[0]
             result = first*second % private_key[0]
+            result = result.to_bytes(4, 'big')
 
-            plaintext += result.to_bytes(4, 'big')
+            output.write(str(result, 'ascii'))
+
+            plaintext += result
+
+    output.write('\n')
+    output.close()
 
     return plaintext
 
 
 def encrypt(plaintext, public_key):
+    output = open('testfiles/ctext.txt', 'w+')
+
     ciphertexts = []
     with open(plaintext, 'rb') as f:
         while True:
@@ -45,7 +55,14 @@ def encrypt(plaintext, public_key):
 
             results = create_ciphertexts(public_key, block, k)
             # print(results)
+            line = ' '.join(str(ctext) for ctext in results)
+            print(line)
+            line = line + '\n'
+            output.write(line)
+
             ciphertexts.append(results[0])
             ciphertexts.append(results[1])
+
+    output.close()
 
     return ciphertexts
