@@ -1,4 +1,5 @@
 Name: Grant Lindberg
+Email: grant.indberg@wsu.edu
 Date: March 23, 2018
 Project: Program 2
 
