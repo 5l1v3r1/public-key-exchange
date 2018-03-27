@@ -41,7 +41,7 @@ def generate_random_prime(k):
     valid_prime = False
     while not valid_prime:
         q = randint(min_size+1, max_size)
-        if q % 12 == 5:
+        if is_prime(q) and q % 12 == 5:
             p = 2*q + 1
             if is_prime(p):
                 valid_prime = True

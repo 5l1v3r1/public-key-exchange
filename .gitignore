@@ -1,5 +1,5 @@
 tests.txt
 __pycache__/
 .vscode/
-testfiles/*
+testfiles/
 test.py
