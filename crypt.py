@@ -13,12 +13,22 @@ def create_ciphertexts(public_key, block, k):
     return (c1, c2)
 
 
-def decrypt(ciphertexts, private_key):
-    first = power(ciphertexts[0], private_key[0]-1-private_key[2], private_key[0])
-    second = ciphertexts[1] % private_key[0]
-    result = first*second % private_key[0]
+def decrypt(ciphertexts_file, private_key):
+    plaintext = b''
+    with open(ciphertexts_file, 'r') as f:
+        while True:
+            ciphertexts = f.readline().rsplit()
+            if not ciphertexts:
+                break
+            ciphertexts = [int(num) for num in ciphertexts]
+            # print(ciphertexts)
+            first = power(ciphertexts[0], private_key[0]-1-private_key[2], private_key[0])
+            second = ciphertexts[1] % private_key[0]
+            result = first*second % private_key[0]
 
-    return result.to_bytes(4, 'big')
+            plaintext += result.to_bytes(4, 'big')
+
+    return plaintext
 
 
 def encrypt(plaintext, public_key):
