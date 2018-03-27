@@ -1,4 +1,4 @@
-from random import randrange
+from random import randint
 
 from exponent import power, fast_pow
 
@@ -20,7 +20,7 @@ def is_prime(n):
     if n == 2:
         return True
     (k, q) = find_integers_for_prime_testing(n)
-    a = randrange(2, n-1)
+    a = randint(2, n-1)
     # print("n: %d" % n)
     # print("k: %d" % k)
     # print("q: %d" % q)
@@ -32,3 +32,18 @@ def is_prime(n):
             return True
 
     return False
+
+
+def generate_random_prime(k):
+    min_size = fast_pow(2, k-2)
+    max_size = fast_pow(2, k-1)
+
+    valid_prime = False
+    while not valid_prime:
+        q = randint(min_size+1, max_size)
+        if q % 12 == 5:
+            p = 2*q + 1
+            if is_prime(p):
+                valid_prime = True
+
+    return p
